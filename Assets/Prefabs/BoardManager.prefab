@@ -53,4 +53,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   columns: 10
   rows: 5
-  floorTiles: {fileID: 1733513506062106, guid: 3e517de570e47794e9f1abd2f2223561, type: 2}
+  floorTiles: {fileID: 1040084210553138, guid: b3af768af8d913f4383d57608467c071, type: 2}

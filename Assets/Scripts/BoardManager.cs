@@ -32,7 +32,7 @@ public class BoardManager : MonoBehaviour
   void BoardSetup()
     {
         boardHolder = new GameObject("Board").transform;
-        for (int x = -7; x < columns; x++)
+        for (int x = -10; x < columns; x++)
         {
             for (int y = -2; y < rows; y++)
             {

@@ -19,9 +19,9 @@ public class BoardManager : MonoBehaviour
     void InitialiseList()
     {
         gridPositions.Clear();
-        for (int x = -14; x < columns; x++)
+        for (int x = -7; x < columns; x++)
         {
-            for (int y = -3; y < rows; y++)
+            for (int y = -2; y < rows; y++)
             {
                 gridPositions.Add(new Vector3(x, y, 0.0f));
             }
@@ -32,7 +32,7 @@ public class BoardManager : MonoBehaviour
   void BoardSetup()
     {
         boardHolder = new GameObject("Board").transform;
-        for (int x = -10; x < columns; x++)
+        for (int x = -7; x < columns; x++)
         {
             for (int y = -2; y < rows; y++)
             {

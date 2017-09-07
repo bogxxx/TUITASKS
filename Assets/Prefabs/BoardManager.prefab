@@ -51,6 +51,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cd884f7cdbd5604092be0d4b3922a0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  columns: 9
+  columns: 10
   rows: 5
   floorTiles: {fileID: 1733513506062106, guid: 3e517de570e47794e9f1abd2f2223561, type: 2}

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TilesScript : MonoBehaviour {
 
+
     private void OnMouseDown()
     {
         BoardManager.toInstantiate = gameObject;

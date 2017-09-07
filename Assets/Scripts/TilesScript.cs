@@ -7,6 +7,7 @@ public class TilesScript : MonoBehaviour {
     private void OnMouseDown()
     {
         BoardManager.toInstantiate = gameObject;
+        BoardManager.rotation = 0;
     }
 
     // Use this for initialization

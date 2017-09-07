@@ -6,19 +6,20 @@ using UnityEngine;
 public class BoardManager : MonoBehaviour
 {
     [SerializeField]
-    public int columns = 6;
+    public int columns = 4;
     [SerializeField]
     public int rows = 1;
 
     public GameObject floorTiles;
     public static GameObject toInstantiate;
+    public static int rotation = 0;
     private Transform boardHolder;
     private List<Vector3> gridPositions = new List<Vector3>();
 
     void InitialiseList()
     {
         gridPositions.Clear();
-        for (int x = -12; x < columns; x++)
+        for (int x = -14; x < columns; x++)
         {
             for (int y = -3; y < rows; y++)
             {
@@ -31,9 +32,9 @@ public class BoardManager : MonoBehaviour
   void BoardSetup()
     {
         boardHolder = new GameObject("Board").transform;
-        for (int x = -14; x < columns; x++)
+        for (int x = -10; x < columns; x++)
         {
-            for (int y = -3; y < rows; y++)
+            for (int y = -2; y < rows; y++)
             {
 
                 GameObject inctance = Instantiate(floorTiles, new Vector3(x, y, 0f), Quaternion.identity) as GameObject;

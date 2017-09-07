@@ -1,10 +1,9 @@
 fileFormatVersion: 2
-guid: a1aa44f6843ccbf4ebde859e87abf882
-timeCreated: 1504730646
+guid: bc69a44113da41f4aac0cbb1554c53e0
+timeCreated: 1504791300
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName:
-    21300000: block_0
+  fileIDToRecycleName: {}
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -40,13 +39,13 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spritePixelsToUnits: 330
+  spritePixelsToUnits: 512
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -90,21 +89,7 @@ TextureImporter:
     overridden: 0
   spriteSheet:
     serializedVersion: 2
-    sprites:
-    - serializedVersion: 2
-      name: block_0
-      rect:
-        serializedVersion: 2
-        x: 73
-        y: 80
-        width: 330
-        height: 327
-      alignment: 6
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
+    sprites: []
     outline: []
     physicsShape: []
   spritePackingTag: 

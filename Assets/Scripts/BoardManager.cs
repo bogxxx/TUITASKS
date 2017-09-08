@@ -11,43 +11,23 @@ public class BoardManager : MonoBehaviour
     public int rows = 1;
 
     public GameObject floorTiles;
-    public static GameObject toInstantiate;
+    public static GameObject toInstantiate = null;
     public static int rotation = 0;
-    private Transform boardHolder;
-    private List<Vector3> gridPositions = new List<Vector3>();
+    public static GameObject[,] board;
 
-    void InitialiseList()
+  void Start()
     {
-        gridPositions.Clear();
-        for (int x = -7; x < columns; x++)
+        board = new GameObject[columns, rows];
+        for (int x = 0; x < columns; x++)
         {
-            for (int y = -2; y < rows; y++)
+            for (int y = 0; y < rows; y++)
             {
-                gridPositions.Add(new Vector3(x, y, 0.0f));
-            }
-        }
+                board[x, y] = floorTiles;
+                Instantiate(board[x, y], new Vector3(x, y, 0f), Quaternion.Euler(0,0,0));
 
-    }
-
-  void BoardSetup()
-    {
-        boardHolder = new GameObject("Board").transform;
-        for (int x = -10; x < columns; x++)
-        {
-            for (int y = -2; y < rows; y++)
-            {
-
-                GameObject inctance = Instantiate(floorTiles, new Vector3(x, y, 0f), Quaternion.identity) as GameObject;
-
-                inctance.transform.SetParent(boardHolder);
+                
             }
         }
     }
 
-
-    public void SetupScene()
-    {
-        BoardSetup();
-        InitialiseList();
-    }
 }

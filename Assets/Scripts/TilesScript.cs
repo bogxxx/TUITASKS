@@ -10,7 +10,7 @@ public class TilesScript : MonoBehaviour
 
     private void OnMouseDown()
     {
-        BoardManager.toInstantiate = gameObject;
+        if (BoardManager.toInstantiate != gameObject) BoardManager.toInstantiate = gameObject; else BoardManager.toInstantiate = null;
         BoardManager.rotation = 0;
     }
 

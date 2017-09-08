@@ -9,7 +9,7 @@ public class RightRotationScript : MonoBehaviour {
 
     private void OnMouseDown()
     {
-        BoardManager.rotation = 90;
+        if (BoardManager.rotation != 90) BoardManager.rotation = 90; else BoardManager.rotation = 0;
         BoardManager.toInstantiate = null;
     }
 

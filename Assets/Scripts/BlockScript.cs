@@ -7,7 +7,6 @@ public class BlockScript : MonoBehaviour
 {
 
     private GameObject instantiateObject;
-    public Sprite defaultSprite;
     private Sprite tempSprite;
     private Vector3 dragPosition;
     public Camera _camera;
@@ -17,7 +16,7 @@ public class BlockScript : MonoBehaviour
         if (Input.GetMouseButtonDown(1))
         {
             RaycastHit2D hit = Physics2D.Raycast(_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-            hit.transform.GetComponent<SpriteRenderer>().sprite = defaultSprite;
+            hit.transform.GetComponent<SpriteRenderer>().sprite = null;
         }
     }
 
@@ -45,7 +44,7 @@ public class BlockScript : MonoBehaviour
         {
             
             tempSprite = gameObject.GetComponent<SpriteRenderer>().sprite;
-            gameObject.GetComponent<SpriteRenderer>().sprite = defaultSprite;
+            gameObject.GetComponent<SpriteRenderer>().sprite = null;
             hit.transform.GetComponent<SpriteRenderer>().sprite = tempSprite;
             hit.transform.SetPositionAndRotation(hit.transform.position, gameObject.transform.rotation);
 

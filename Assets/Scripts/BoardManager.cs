@@ -6,9 +6,9 @@ using UnityEngine;
 public class BoardManager : MonoBehaviour
 {
     [SerializeField]
-    public int columns = 4;
+    public int columns;
     [SerializeField]
-    public int rows = 1;
+    public int rows;
 
     public GameObject floorTiles;
     public GameObject backgroundTiles;

@@ -85,6 +85,7 @@
     <Compile Include="Assets\Scripts\BoardManager.cs" />
     <Compile Include="Assets\Scripts\LeftRotationScript.cs" />
     <Compile Include="Assets\Scripts\RightRotationScript.cs" />
+    <Compile Include="Assets\Scripts\SaveLoadScript.cs" />
     <Compile Include="Assets\Scripts\TilesScript.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

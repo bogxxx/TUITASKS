@@ -22,7 +22,6 @@ public class BlockScript : MonoBehaviour
 
     void OnMouseDown()
     {
-
                 if (BoardManager.rotation != 0)
                 {
                     transform.Rotate(new Vector3(0, 0, BoardManager.rotation));

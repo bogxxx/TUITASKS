@@ -26,4 +26,5 @@ public class LeftRotationScript : MonoBehaviour {
             gameObject.GetComponent<SpriteRenderer>().color = color1;
         }
     }
+    
 }

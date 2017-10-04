@@ -9,7 +9,6 @@ public class RedoScript : MonoBehaviour
 
     private void OnMouseDown()
     {
-        Debug.Log(UndoRedoScript.maxRedo);
         if (UndoRedoScript.maxRedo > 0)
         {
             BlockScript.undoI++;

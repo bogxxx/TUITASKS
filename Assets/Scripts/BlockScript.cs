@@ -21,6 +21,11 @@ public struct UndoRedo
 
 public class BlockScript : MonoBehaviour
 {
+    IEnumerator Waiting(float waitTime)                //Timer coroutine
+    {
+        yield return new WaitForSeconds(waitTime);          //Waits for alotted seconds to pass
+        hold = false;                                       //sets hold bool to false (no longer allows DoubleClick action)
+    }
 
     private GameObject instantiateObject;
     private Sprite tempSprite;
@@ -28,6 +33,14 @@ public class BlockScript : MonoBehaviour
     public Camera _camera;
     public Sprite[] arraySprites;
     public static int undoI = -1;
+    public int resist = -1;
+    public int eds = -1;
+    public bool hold = false;               //Begins hold bool as false
+    public float secondsToWait = 1f;      //sets the timer between clicks in seconds (default is 1.0)
+    private bool doResist, doEds;
+
+
+
 
 
     public int getIntOfImage(Sprite sprite1)
@@ -43,44 +56,83 @@ public class BlockScript : MonoBehaviour
         return -1;
     }
 
-
-    private void SaveData(int i)
+    private void OnGUI()
     {
-        UndoRedo.xPos[i] = (int)gameObject.transform.position.x;
-        UndoRedo.yPos[i] = (int)gameObject.transform.position.y;
-        UndoRedo.spriteNumber[i] = getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite);
-        UndoRedo.quaternionW[i] = gameObject.transform.rotation.w;
-        UndoRedo.quaternionX[i] = gameObject.transform.rotation.x;
-        UndoRedo.quaternionY[i] = gameObject.transform.rotation.y;
-        UndoRedo.quaternionZ[i] = gameObject.transform.rotation.z;
-    }
+        GUI.color = Color.cyan;
+        if (doEds)
+        {
+            GUI.Label(new Rect(400 + transform.position.x * 99, Screen.height - (94 + transform.position.y * 98), 45, 20), eds.ToString() + " В");
+        }
 
-
-    private void SaveNewData(int i)
-    {
-        UndoRedo.newSpriteNumber[i] = getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite);
-        UndoRedo.newQuaternionW[i] = gameObject.transform.rotation.w;
-        UndoRedo.newQuaternionX[i] = gameObject.transform.rotation.x;
-        UndoRedo.newQuaternionY[i] = gameObject.transform.rotation.y;
-        UndoRedo.newQuaternionZ[i] = gameObject.transform.rotation.z;
+        GUI.color = Color.cyan;
+        if (doResist)
+        {
+            GUI.Label(new Rect(367 + transform.position.x * 99, Screen.height - (64 + transform.position.y * 98), 60, 20), resist.ToString() + " Ом");
+        }
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(1))
+
+        if (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) != 4)
+        {
+            doResist = false;
+        }
+
+        if (resist!= -1 && getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 4)
+        {
+            doResist = true;
+        }
+
+        if (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) != 2)
+        {
+            doEds = false;
+        }
+
+        if (eds != -1 && getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 2)
+        {
+            doEds = true;
+        }
+
+        if (Input.GetMouseButtonUp(1))
         {
             undoI++;
             SaveData(undoI);
             RaycastHit2D hit = Physics2D.Raycast(_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             hit.transform.GetComponent<SpriteRenderer>().sprite = null;
+            BoardManager.toInstantiate = null;
+            BoardManager.rotation = 0;
             SaveNewData(undoI);
         }
+
+
     }
 
     void OnMouseDown()
     {
+        Debug.Log(transform.position.x + " " + transform.position.y);
+        Debug.Log(Input.mousePosition);
+        if (hold == true && (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 4 || getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 2)) //these actions can occur if bool is true
+        {
+            LabelScript.x = transform.position.x;
+            LabelScript.y = transform.position.y;
+            if (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 4)
+            {
+                LabelScript.doResistWindow = true;
+            }
+            if (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 2)
+            {
+                LabelScript.doEdsWindow = true;
+            }
+            
+        }
+        hold = true;                                    //Sets hold bool to true
+        StartCoroutine(Waiting(secondsToWait));    //Begins timer
+
+
         if (BoardManager.rotation != 0)
         {
+            UndoRedoScript.maxRedo = 0;
             undoI++;
             SaveData(undoI);
             transform.Rotate(new Vector3(0, 0, BoardManager.rotation));
@@ -89,6 +141,7 @@ public class BlockScript : MonoBehaviour
         else
         if (BoardManager.toInstantiate != null)
             {
+            UndoRedoScript.maxRedo = 0;
             undoI++;
             SaveData(undoI);
             gameObject.transform.SetPositionAndRotation(transform.position, Quaternion.Euler(0, 0, 0));
@@ -112,4 +165,34 @@ public class BlockScript : MonoBehaviour
 
         }
     }
+
+
+
+
+
+
+
+
+
+    private void SaveData(int i)
+    {
+        UndoRedo.xPos[i] = (int)gameObject.transform.position.x;
+        UndoRedo.yPos[i] = (int)gameObject.transform.position.y;
+        UndoRedo.spriteNumber[i] = getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite);
+        UndoRedo.quaternionW[i] = gameObject.transform.rotation.w;
+        UndoRedo.quaternionX[i] = gameObject.transform.rotation.x;
+        UndoRedo.quaternionY[i] = gameObject.transform.rotation.y;
+        UndoRedo.quaternionZ[i] = gameObject.transform.rotation.z;
+    }
+
+
+    private void SaveNewData(int i)
+    {
+        UndoRedo.newSpriteNumber[i] = getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite);
+        UndoRedo.newQuaternionW[i] = gameObject.transform.rotation.w;
+        UndoRedo.newQuaternionX[i] = gameObject.transform.rotation.x;
+        UndoRedo.newQuaternionY[i] = gameObject.transform.rotation.y;
+        UndoRedo.newQuaternionZ[i] = gameObject.transform.rotation.z;
+    }
+
 }

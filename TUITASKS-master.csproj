@@ -84,6 +84,7 @@
     <Compile Include="Assets\Scripts\BlockScript.cs" />
     <Compile Include="Assets\Scripts\BoardManager.cs" />
     <Compile Include="Assets\Scripts\Gauss.cs" />
+    <Compile Include="Assets\Scripts\LabelScript.cs" />
     <Compile Include="Assets\Scripts\LeftRotationScript.cs" />
     <Compile Include="Assets\Scripts\RedoScript.cs" />
     <Compile Include="Assets\Scripts\RightRotationScript.cs" />

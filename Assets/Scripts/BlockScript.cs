@@ -7,6 +7,8 @@ public struct UndoRedo
 {
     public static int[] xPos = new int[1000];
     public static int[] yPos = new int[1000];
+    public static int[] xPosForDrag = new int[1000];
+    public static int[] yPosForDrag = new int[1000];
     public static int[] spriteNumber = new int[1000];
     public static int[] newSpriteNumber = new int[1000];
     public static float[] quaternionW = new float[1000];
@@ -17,6 +19,8 @@ public struct UndoRedo
     public static float[] newQuaternionX = new float[1000];
     public static float[] newQuaternionY = new float[1000];
     public static float[] newQuaternionZ = new float[1000];
+    public static int[] eds = new int[1000];
+    public static int[] resist = new int[1000];
 }
 
 public class BlockScript : MonoBehaviour
@@ -74,35 +78,32 @@ public class BlockScript : MonoBehaviour
     private void Update()
     {
 
-        if (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) != 4)
-        {
-            doResist = false;
-        }
-
-        if (resist!= -1 && getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 4)
+        if (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 4)
         {
             doResist = true;
         }
+        else doResist = false;
 
-        if (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) != 2)
-        {
-            doEds = false;
-        }
-
-        if (eds != -1 && getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 2)
+        if (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 2)
         {
             doEds = true;
         }
+        else doEds = false;
 
         if (Input.GetMouseButtonUp(1))
         {
-            undoI++;
-            SaveData(undoI);
-            RaycastHit2D hit = Physics2D.Raycast(_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-            hit.transform.GetComponent<SpriteRenderer>().sprite = null;
-            BoardManager.toInstantiate = null;
-            BoardManager.rotation = 0;
-            SaveNewData(undoI);
+            RaycastHit2D hit1 = Physics2D.Raycast(_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            if (hit1.transform.position == transform.position)
+            {
+                UndoRedoScript.maxRedo = 0;
+                undoI++;
+                SaveData(undoI);
+                RaycastHit2D hit = Physics2D.Raycast(_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+                hit.transform.GetComponent<SpriteRenderer>().sprite = null;
+                BoardManager.toInstantiate = null;
+                BoardManager.rotation = 0;
+                SaveNewData(undoI);
+            }
         }
 
 
@@ -110,8 +111,6 @@ public class BlockScript : MonoBehaviour
 
     void OnMouseDown()
     {
-        Debug.Log(transform.position.x + " " + transform.position.y);
-        Debug.Log(Input.mousePosition);
         if (hold == true && (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 4 || getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 2)) //these actions can occur if bool is true
         {
             LabelScript.x = transform.position.x;
@@ -139,7 +138,7 @@ public class BlockScript : MonoBehaviour
             SaveNewData(undoI);
         }
         else
-        if (BoardManager.toInstantiate != null)
+        if (BoardManager.toInstantiate != null && BoardManager.toInstantiate != gameObject.GetComponent<SpriteRenderer>().sprite)
             {
             UndoRedoScript.maxRedo = 0;
             undoI++;

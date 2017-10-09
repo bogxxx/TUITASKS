@@ -26,8 +26,6 @@ public class BoardManager : MonoBehaviour
                 Instantiate(backgroundTiles, new Vector3(x, y, 5f), Quaternion.Euler(0, 0, 0));
                 board[x, y] = floorTiles;
                 Instantiate(board[x, y], new Vector3(x, y, 0f), Quaternion.Euler(0,0,0));
-
-                
             }
         }
     }

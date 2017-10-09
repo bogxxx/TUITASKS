@@ -67,8 +67,8 @@ public class SaveLoadScript : MonoBehaviour
     {
     if (Saves[i] != "")
         {
-            string[] data = new string[7];
-            float[] result = new float[7];
+            string[] data = new string[9];
+            float[] result = new float[9];
             data = Saves[i].Split(' ');
             for (int a = 0; a < data.Length; a++)
             {
@@ -110,7 +110,8 @@ public class SaveLoadScript : MonoBehaviour
                     int spriteInt = -1;
                     RaycastHit2D hit = Physics2D.Raycast(new Vector3(x, y, -10f), Vector2.zero);
                     spriteInt = getIntOfImage(hit.transform.GetComponent<SpriteRenderer>().sprite);
-                    Saves[i] = x.ToString() + " " + y.ToString() + " " + spriteInt.ToString() + " " + (hit.transform.rotation.w).ToString() + " " + (hit.transform.rotation.x).ToString() + " " + (hit.transform.rotation.y).ToString() + " " + (hit.transform.rotation.z).ToString();
+                    Saves[i] = x.ToString() + " " + y.ToString() + " " + spriteInt.ToString() + " " + (hit.transform.rotation.w).ToString() + " " + (hit.transform.rotation.x).ToString() + " " + (hit.transform.rotation.y).ToString() + " " + (hit.transform.rotation.z).ToString() + " " + hit.collider.gameObject.GetComponent<BlockScript>().resist + " " + hit.collider.gameObject.GetComponent<BlockScript>().eds;
+                    
                     i++;
                 }
             }
@@ -133,6 +134,8 @@ public class SaveLoadScript : MonoBehaviour
                 else
                     hit.transform.GetComponent<SpriteRenderer>().sprite = null;
                 hit.transform.rotation = new Quaternion(data[4], data[5], data[6], data[3]);
+                hit.collider.gameObject.GetComponent<BlockScript>().resist = (int)data[7];
+                hit.collider.gameObject.GetComponent<BlockScript>().eds = (int)data[8];
             }
             Debug.Log("Загрузка произведена, мать твою за ногу");
         }

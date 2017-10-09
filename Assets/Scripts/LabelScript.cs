@@ -26,6 +26,7 @@ public class LabelScript : MonoBehaviour {
             windowRect0 = GUI.Window(0, windowRect0, DoMyWindow, "Введите сопротивление резистора:");
         }
     }
+
     void DoMyWindow(int windowID)
     {
         GUI.color = Color.cyan;

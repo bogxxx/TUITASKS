@@ -296,16 +296,15 @@ public class SaveLoadScript : MonoBehaviour
     void Save()
     {
         StreamWriter dataWriter = new StreamWriter(playerDataPath);
-        /*for (int i = 0; i < 14; i++)
+        for (int i = 0; i < 14; i++)
         {
             for (int j = 0; j < 11; j++)
             {
-                //for (int j2 = 0; j2 < 9; j2++)
-                    dataWriter.Write(matrix[i, j, 2] + " ");
-                //dataWriter.Write("   ");
+                for (int j2 = 0; j2 < 9; j2++)
+                    dataWriter.Write(matrix[i, j, j2] + " ");
+                dataWriter.WriteLine();
             }
-            dataWriter.WriteLine();
-        }*/
+        }
         /*for (int i = 0; i < 14; i++)
         {
             for (int j = 0; j < 11; j++)
@@ -400,13 +399,17 @@ public class SaveLoadScript : MonoBehaviour
     void Load()
     {
         StreamReader dataReader = new StreamReader(playerDataPath);
+        string[] stringdata = new string[9];
         for (int i = 0; i < 14; i++)
         {
             for (int j = 0; j < 11; j++)
             {
-                for (int t = 0; t < 9; t++)
+                stringdata = dataReader.ReadLine().Split(' ');
+                Debug.Log(stringdata.Length);
+                for (int a = 0; a < 9; a++)
                 {
-                    //Debug.Log(dataReader.ReadLine());
+                    Debug.Log(stringdata[a]);
+                    matrix[i,j,a] = float.Parse(stringdata[a]);
                 }
                // Debug.Log(matrix[i, j, 0] + " " + matrix[i, j, 1] + " " + matrix[i, j, 2]);
             }
@@ -440,7 +443,7 @@ public class SaveLoadScript : MonoBehaviour
         path = GUI.TextField(new Rect(10, Screen.height / 10, (Screen.width / 3 - 20), Screen.height / 30), path);
         if (GUI.Button(new Rect(Screen.width / 9, Screen.height / 4 + 30, Screen.width / 9, Screen.width / 50), "Подтвердить"))
         {
-            playerDataPath = Application.streamingAssetsPath + "/Saves/" + path + ".db";
+            playerDataPath = "C:/" + path + ".db";
 
 
             GUI.color = Color.cyan;

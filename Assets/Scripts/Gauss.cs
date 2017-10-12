@@ -16,8 +16,8 @@ namespace Gauss {
         public LinearSystem(double[,] a_matrix, double[] b_vector, double eps) {
 
 
-            int b_length = b_vector.Length;
-            int a_length = a_matrix.Length;
+            int b_length = SaveLoadScript.countColor;
+            int a_length = SaveLoadScript.countColor;
 
             this.initial_a_matrix = a_matrix;  // запоминаем исходную матрицу
             this.a_matrix = (double[,])a_matrix.Clone(); // с её копией будем производить вычисления

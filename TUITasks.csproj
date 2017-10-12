@@ -81,14 +81,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\AnalizeScript.cs" />
     <Compile Include="Assets\Scripts\BlockScript.cs" />
     <Compile Include="Assets\Scripts\BoardManager.cs" />
     <Compile Include="Assets\Scripts\Gauss.cs" />
     <Compile Include="Assets\Scripts\LabelScript.cs" />
     <Compile Include="Assets\Scripts\LeftRotationScript.cs" />
+    <Compile Include="Assets\Scripts\LoadScript.cs" />
     <Compile Include="Assets\Scripts\RedoScript.cs" />
     <Compile Include="Assets\Scripts\RightRotationScript.cs" />
     <Compile Include="Assets\Scripts\SaveLoadScript.cs" />
+    <Compile Include="Assets\Scripts\SaveScript.cs" />
     <Compile Include="Assets\Scripts\TilesScript.cs" />
     <Compile Include="Assets\Scripts\UndoRedoScript.cs" />
   </ItemGroup>

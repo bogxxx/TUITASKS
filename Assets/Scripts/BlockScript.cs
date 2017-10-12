@@ -78,13 +78,13 @@ public class BlockScript : MonoBehaviour
     private void Update()
     {
 
-        if (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 4)
+        if (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 6)
         {
             doResist = true;
         }
         else doResist = false;
 
-        if (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 2)
+        if (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 3)
         {
             doEds = true;
         }
@@ -111,15 +111,15 @@ public class BlockScript : MonoBehaviour
 
     void OnMouseDown()
     {
-        if (hold == true && (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 4 || getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 2)) //these actions can occur if bool is true
+        if (hold == true && (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 6 || getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 3)) //these actions can occur if bool is true
         {
             LabelScript.x = transform.position.x;
             LabelScript.y = transform.position.y;
-            if (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 4)
+            if (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 6)
             {
                 LabelScript.doResistWindow = true;
             }
-            if (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 2)
+            if (getIntOfImage(gameObject.GetComponent<SpriteRenderer>().sprite) == 3)
             {
                 LabelScript.doEdsWindow = true;
             }

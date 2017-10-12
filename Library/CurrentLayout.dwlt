@@ -435,13 +435,13 @@ MonoBehaviour:
   m_LastFolders:
   - Assets/TexturesV2
   m_LastFoldersGridSize: -1
-  m_LastProjectPath: C:\Users\root\Desktop\TUIProject
+  m_LastProjectPath: D:\PlatformerUnity\TUITasks
   m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: ca260000
-    m_LastClickedID: 9930
-    m_ExpandedIDs: 000000000a26000018260000
+    m_SelectedIDs: ce260000
+    m_LastClickedID: 9934
+    m_ExpandedIDs: 000000001026000022260000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -469,7 +469,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000000a26000018260000
+    m_ExpandedIDs: 000000001026000022260000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -494,10 +494,10 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 
-    m_LastClickedInstanceID: 0
+    m_SelectedInstanceIDs: 0a2b0000
+    m_LastClickedInstanceID: 11018
     m_HadKeyboardFocusLastEvent: 1
-    m_ExpandedInstanceIDs: 6a1c00007651ffff3a2a00005a2600007a2a0000d4260000000000007a610000
+    m_ExpandedInstanceIDs: 6a1c00007651ffff3a2a00007a2a0000d4260000000000007a61000092260000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -585,9 +585,9 @@ MonoBehaviour:
     height: 648
   m_TreeViewState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 
-    m_LastClickedID: 0
-    m_ExpandedIDs: 1afcffff00000000
+    m_SelectedIDs: 6a270000
+    m_LastClickedID: 10090
+    m_ExpandedIDs: 1afcffff00000000b027000002280000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -637,14 +637,14 @@ MonoBehaviour:
     width: 1224
     height: 648
   m_SceneLighting: 1
-  lastFramingTime: 2758.779449810268
+  lastFramingTime: 1593.8777313388405
   m_2DMode: 1
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 5.904604, y: 4.7217693, z: 15.714844}
+    m_Target: {x: 7.2252603, y: 4.8519177, z: 1.921875}
     speed: 2
-    m_Value: {x: 5.904604, y: 4.7217693, z: 15.714844}
+    m_Value: {x: 7.2252603, y: 4.8519177, z: 1.921875}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -671,9 +671,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 12.9066725
+    m_Target: 17.08293
     speed: 2
-    m_Value: 12.9066725
+    m_Value: 17.08293
   m_Ortho:
     m_Target: 1
     speed: 2

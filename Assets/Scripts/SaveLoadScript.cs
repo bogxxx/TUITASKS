@@ -6,23 +6,23 @@ using UnityEngine.UI;
 
 public class SaveLoadScript : MonoBehaviour
 {
-    double[,] a_matrix = new double[100,100];
+    double[,] a_matrix = new double[100, 100];
     double[] b_vector = new double[100];
     int[] colorArray = new int[100];
     public static int countColor = 0;
     double[] result = new double[100];
-
+    public static bool doAnalizeWindow;
 
 
     public struct ResistorInOut
-    {        
+    {
         public int firstUzel;
         public int secondUzel;
         public float resistorNum;
     };
-    public ResistorInOut[,] resistorsMatrixArr = new ResistorInOut[100,100]; 
+    public ResistorInOut[,] resistorsMatrixArr = new ResistorInOut[100, 100];
     private int boundColor = 0;
-    private int[,] boardColor = new int[100, 100]; 
+    private int[,] boardColor = new int[100, 100];
     [SerializeField]
     public Sprite[] arraySprites;
 
@@ -132,7 +132,7 @@ public class SaveLoadScript : MonoBehaviour
             }
         }
         else
-        if (matrix[i,j,2] == 10)
+        if (matrix[i, j, 2] == 10)
         {
             if (matrix[i, j, 3] == 1f && matrix[i, j, 6] == 0f)
             {
@@ -226,10 +226,10 @@ public class SaveLoadScript : MonoBehaviour
     }
     void dfs(int i, int j)
     {
-        if (matrix[i,j,2] == 3)
+        if (matrix[i, j, 2] == 3)
         {
             boardColor[i, j] = -3;
-            if (matrix[i,j,3] == 1f && matrix[i, j, 6] == 0f)
+            if (matrix[i, j, 3] == 1f && matrix[i, j, 6] == 0f)
             {
                 boundColor++;
                 dfs(i + 1, j);
@@ -275,7 +275,7 @@ public class SaveLoadScript : MonoBehaviour
             if ((matrix[i, j, 3] == 0.7071068f && matrix[i, j, 6] == 0.7071068f) || (matrix[i, j, 3] == -0.7071068f && matrix[i, j, 6] == 0.7071068f))
             {
                 if (boardColor[i, j - 1] == 0)
-                {                    
+                {
                     dfs(i, j - 1);
                 }
                 else
@@ -292,99 +292,114 @@ public class SaveLoadScript : MonoBehaviour
         }
 
     }
- 
+
     void Save()
     {
-        StreamWriter dataWriter = new StreamWriter(playerDataPath);
-        for (int i = 0; i < 14; i++)
-        {
-            for (int j = 0; j < 11; j++)
-            {
-                for (int j2 = 0; j2 < 9; j2++)
-                    dataWriter.Write(matrix[i, j, j2] + " ");
-                dataWriter.WriteLine();
-            }
-        }
-        /*for (int i = 0; i < 14; i++)
-        {
-            for (int j = 0; j < 11; j++)
-            {
-                dataWriter.Write(boardColor[i, j] + " ");
-            }
-            dataWriter.WriteLine();
-        }*/
-        double allResist;
-        int xPosEds = 6, yPosEds = 6;
 
-        for (int currentcolor = 0; currentcolor < countColor; currentcolor++)
+        StreamWriter dataWriter = new StreamWriter(playerDataPath);
+        if (!doAnalizeWindow)
         {
-            allResist = 0;
             for (int i = 0; i < 14; i++)
             {
                 for (int j = 0; j < 11; j++)
                 {
-                    if (boardColor[i, j] < 0 && matrix[i,j,2] != 3)
-                    {
-                        if (resistorsMatrixArr[i, j].firstUzel == colorArray[currentcolor])
-                        {
-                            a_matrix[currentcolor, ColorInArray(resistorsMatrixArr[i, j].secondUzel)] += 1 / resistorsMatrixArr[i, j].resistorNum;
-                            allResist+= 1 / resistorsMatrixArr[i, j].resistorNum;
-                        }
-                        if (resistorsMatrixArr[i, j].secondUzel == colorArray[currentcolor])
-                        {
-                            a_matrix[currentcolor, ColorInArray(resistorsMatrixArr[i, j].firstUzel)] += 1 / resistorsMatrixArr[i, j].resistorNum;
-                            allResist += 1 / resistorsMatrixArr[i, j].resistorNum;
-                        }
-                    } else
-                    if (matrix[i, j, 2] == 3)
-                    {
-                        xPosEds = i;
-                        xPosEds = j;
-                    }
+                    for (int j2 = 0; j2 < 9; j2++)
+                        dataWriter.Write(matrix[i, j, j2] + " ");
+                    dataWriter.WriteLine();
                 }
             }
-            a_matrix[currentcolor, currentcolor] = -allResist;
         }
-        for (int i = 0; i < countColor; i++)
+        else
         {
-            a_matrix[ColorInArray(resistorsMatrixArr[xPosEds, yPosEds].firstUzel), i] = 0;
-            a_matrix[ColorInArray(resistorsMatrixArr[xPosEds, yPosEds].secondUzel), i] = 0;
-        }
-        a_matrix[ColorInArray(resistorsMatrixArr[xPosEds, yPosEds].firstUzel), ColorInArray(resistorsMatrixArr[xPosEds, yPosEds].firstUzel)] = 1;
-        a_matrix[ColorInArray(resistorsMatrixArr[xPosEds, yPosEds].secondUzel), ColorInArray(resistorsMatrixArr[xPosEds, yPosEds].secondUzel)] = 1;
-        b_vector[ColorInArray(resistorsMatrixArr[xPosEds, yPosEds].secondUzel)] = resistorsMatrixArr[xPosEds, yPosEds].resistorNum;
-
-        Gauss.LinearSystem U = new Gauss.LinearSystem(a_matrix, b_vector, 1);
-
-        result = U.XVector;
-        for (int i = 0; i < countColor; i++)
-        {
-            dataWriter.Write(result[i] + " ");
-        }
-
-        /*for (int i = 0; i < countColor; i++)
-        {
-            for (int j = 0; j < countColor; j++)
+            for (int i = 0; i < 14; i++)
             {
-                dataWriter.Write(a_matrix[i,j]+ " ");
+                for (int j = 0; j < 11; j++)
+                {
+                    dataWriter.Write(boardColor[i, j] + " ");
+                }
+                dataWriter.WriteLine();
             }
-            dataWriter.WriteLine(b_vector[i]);
-        }
+            double allResist;
+            int xPosEds = 6, yPosEds = 6;
 
+            for (int currentcolor = 0; currentcolor < countColor; currentcolor++)
+            {
+                allResist = 0;
                 for (int i = 0; i < 14; i++)
                 {
                     for (int j = 0; j < 11; j++)
                     {
-                        if (boardColor[i,j] < 0)
+                        if (boardColor[i, j] < 0 && matrix[i, j, 2] != 3)
                         {
-                            dataWriter.WriteLine(resistorsMatrixArr[i,j].firstUzel + " " + resistorsMatrixArr[i, j].secondUzel + " " + i + " " + j + " " + resistorsMatrixArr[i,j].resistorNum);
+                            if (resistorsMatrixArr[i, j].firstUzel == colorArray[currentcolor])
+                            {
+                                a_matrix[currentcolor, ColorInArray(resistorsMatrixArr[i, j].secondUzel)] += 1 / resistorsMatrixArr[i, j].resistorNum;
+                                allResist += 1 / resistorsMatrixArr[i, j].resistorNum;
+                            }
+                            if (resistorsMatrixArr[i, j].secondUzel == colorArray[currentcolor])
+                            {
+                                a_matrix[currentcolor, ColorInArray(resistorsMatrixArr[i, j].firstUzel)] += 1 / resistorsMatrixArr[i, j].resistorNum;
+                                allResist += 1 / resistorsMatrixArr[i, j].resistorNum;
+                            }
                         }
-                    }            
-                }*/
+                        else
+                        if (matrix[i, j, 2] == 3)
+                        {
+                            xPosEds = i;
+                            xPosEds = j;
+                        }
+                    }
+                }
+                a_matrix[currentcolor, currentcolor] = -allResist;
+            }
+            for (int i = 0; i < countColor; i++)
+            {
+                a_matrix[ColorInArray(resistorsMatrixArr[xPosEds, yPosEds].firstUzel), i] = 0;
+                a_matrix[ColorInArray(resistorsMatrixArr[xPosEds, yPosEds].secondUzel), i] = 0;
+            }
+            a_matrix[ColorInArray(resistorsMatrixArr[xPosEds, yPosEds].firstUzel), ColorInArray(resistorsMatrixArr[xPosEds, yPosEds].firstUzel)] = 1;
+            a_matrix[ColorInArray(resistorsMatrixArr[xPosEds, yPosEds].secondUzel), ColorInArray(resistorsMatrixArr[xPosEds, yPosEds].secondUzel)] = 1;
+            b_vector[ColorInArray(resistorsMatrixArr[xPosEds, yPosEds].secondUzel)] = resistorsMatrixArr[xPosEds, yPosEds].resistorNum;
 
-                dataWriter.Flush();
-        dataWriter.Close();
+            Gauss.LinearSystem U = new Gauss.LinearSystem(a_matrix, b_vector, 1);
 
+            result = U.XVector;
+
+            for (int i = 0; i < 14; i++)
+            {
+                for (int j = 0; j < 11; j++)
+                {
+                    if (ColorInArray(boardColor[i, j]) != 50)
+                        dataWriter.Write(result[ColorInArray(boardColor[i, j])] + " ");
+                    else
+                        dataWriter.Write(-1 + " ");
+                }
+                dataWriter.WriteLine();
+            }
+            doAnalizeWindow = false;
+
+            /*for (int i = 0; i < countColor; i++)
+            {
+                for (int j = 0; j < countColor; j++)
+                {
+                    dataWriter.Write(a_matrix[i,j]+ " ");
+                }
+                dataWriter.WriteLine(b_vector[i]);
+            }
+                    for (int i = 0; i < 14; i++)
+                    {
+                        for (int j = 0; j < 11; j++)
+                        {
+                            if (boardColor[i,j] < 0)
+                            {
+                                dataWriter.WriteLine(resistorsMatrixArr[i,j].firstUzel + " " + resistorsMatrixArr[i, j].secondUzel + " " + i + " " + j + " " + resistorsMatrixArr[i,j].resistorNum);
+                            }
+                        }            
+                    }*/
+
+            dataWriter.Flush();
+            dataWriter.Close();
+        }
     }
 
     int ColorInArray(int color)
@@ -409,12 +424,12 @@ public class SaveLoadScript : MonoBehaviour
                 for (int a = 0; a < 9; a++)
                 {
                     Debug.Log(stringdata[a]);
-                    matrix[i,j,a] = float.Parse(stringdata[a]);
+                    matrix[i, j, a] = float.Parse(stringdata[a]);
                 }
-               // Debug.Log(matrix[i, j, 0] + " " + matrix[i, j, 1] + " " + matrix[i, j, 2]);
+                // Debug.Log(matrix[i, j, 0] + " " + matrix[i, j, 1] + " " + matrix[i, j, 2]);
             }
         }
-       dataReader.Close();
+        dataReader.Close();
     }
 
 
@@ -470,7 +485,7 @@ public class SaveLoadScript : MonoBehaviour
                 Debug.Log("Загрузка произведена, мать твою за ногу");
             }
             doLoadWindow = false;
-            
+
 
             if (windowID == 1)
             {
@@ -513,12 +528,12 @@ public class SaveLoadScript : MonoBehaviour
                 }
                 boundColor = 0;
                 dfs(6, 6);
-                
+
                 for (int x = 0; x < 14; x++)
                 {
                     for (int y = 0; y < 11; y++)
                     {
-                        if (matrix[x,y,2] == 6 || matrix[x,y,2] == 3)
+                        if (matrix[x, y, 2] == 6 || matrix[x, y, 2] == 3)
                         {
                             resistorsMatrixArr[x, y].resistorNum = matrix[x, y, 7];
                             if ((matrix[x, y, 3] == 1 && matrix[x, y, 6] == 0) || (matrix[x, y, 3] == 0 && matrix[x, y, 6] == 1))
@@ -535,7 +550,7 @@ public class SaveLoadScript : MonoBehaviour
                                         resistorsMatrixArr[x, y].firstUzel = boardColor[x + 1, y];
                                     else
                                     if (resistorsMatrixArr[x, y].secondUzel == 0)
-                                            resistorsMatrixArr[x, y].secondUzel = boardColor[x + 1, y];
+                                        resistorsMatrixArr[x, y].secondUzel = boardColor[x + 1, y];
                             }
                             else
                             {
@@ -548,19 +563,19 @@ public class SaveLoadScript : MonoBehaviour
                                         if (resistorsMatrixArr[x, y].secondUzel == 0)
                                             resistorsMatrixArr[x, y].secondUzel = boardColor[x, y - 1];
 
-                                        if (boardColor[x, y + 1] > 0)
+                                    if (boardColor[x, y + 1] > 0)
                                         if (resistorsMatrixArr[x, y].firstUzel == 0)
                                             resistorsMatrixArr[x, y].firstUzel = boardColor[x, y + 1];
                                         else
                                             if (resistorsMatrixArr[x, y].secondUzel == 0)
-                                                resistorsMatrixArr[x, y].secondUzel = boardColor[x, y + 1];
+                                            resistorsMatrixArr[x, y].secondUzel = boardColor[x, y + 1];
                                 }
                             }
                         }
                         if (matrix[x, y, 2] == 3)
                         {
                             resistorsMatrixArr[x, y].resistorNum = matrix[x, y, 8];
-                        }                        
+                        }
                     }
                 }
 
@@ -599,8 +614,15 @@ public class SaveLoadScript : MonoBehaviour
         GUI.DragWindow(new Rect(0, 0, 10000, 10000));
     }
 
+    public Camera _camera;
     void Update()
     {
+
+        RaycastHit2D hit = Physics2D.Raycast(_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+        if (ColorInArray(boardColor[(int)hit.transform.position.x, (int)hit.transform.position.y]) != 50)
+            Debug.Log(result[ColorInArray(boardColor[(int)hit.transform.position.x, (int)hit.transform.position.y])] + " ");
+
+
         if (Input.GetKeyDown("s"))
         {
             doSaveWindow = true;

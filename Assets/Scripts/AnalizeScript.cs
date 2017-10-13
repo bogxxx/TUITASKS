@@ -1,13 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class AnalizeScript : MonoBehaviour {
 
     private void OnMouseDown()
     {
-         SaveLoadScript.doAnalizeWindow = true;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
-        
     }
 }

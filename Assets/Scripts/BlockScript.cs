@@ -65,13 +65,13 @@ public class BlockScript : MonoBehaviour
         GUI.color = Color.cyan;
         if (doEds)
         {
-            GUI.Label(new Rect(400 + transform.position.x * 99, Screen.height - (94 + transform.position.y * 98), 45, 20), eds.ToString() + " В");
+            GUI.Label(new Rect((8.5f / 47f) * Screen.width + transform.position.x * (2.42f / 47f) * Screen.width, Screen.height - ((0.1f / 47f) + (transform.position.y +0.9f) * (2.43f / 47f) * Screen.width), 45, 20), eds.ToString() + " В");
         }
 
         GUI.color = Color.cyan;
         if (doResist)
         {
-            GUI.Label(new Rect(367 + transform.position.x * 99, Screen.height - (64 + transform.position.y * 98), 60, 20), resist.ToString() + " Ом");
+            GUI.Label(new Rect(((8.5f+0.6f)/47f)*Screen.width + transform.position.x * (2.42f / 47f) * Screen.width, Screen.height - ((0.8f / 47f) + (transform.position.y + 0.65f) * (2.42f / 47f) * Screen.width), 60, 20), resist.ToString() + " Ом");
         }
     }
 

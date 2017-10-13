@@ -12,7 +12,8 @@ public class SaveLoadScript : MonoBehaviour
     public static int countColor = 0;
     double[] result = new double[100];
     public static bool doAnalizeWindow;
-
+    public static double[,] answerMatrix = new double[100, 100];
+    public GameObject arrowUp, arrowleft, arrowRight, arrowDown;
 
     public struct ResistorInOut
     {
@@ -38,7 +39,7 @@ public class SaveLoadScript : MonoBehaviour
         }
         return -1;
     }
-
+    double electricity = -1;
     string playerDataPath = "", path = "";
     public static float[,] Saves = new float[155, 9];
     public static float[,,] matrix = new float[100, 100, 9];
@@ -297,8 +298,6 @@ public class SaveLoadScript : MonoBehaviour
     {
 
         StreamWriter dataWriter = new StreamWriter(playerDataPath);
-        if (!doAnalizeWindow)
-        {
             for (int i = 0; i < 14; i++)
             {
                 for (int j = 0; j < 11; j++)
@@ -308,8 +307,6 @@ public class SaveLoadScript : MonoBehaviour
                     dataWriter.WriteLine();
                 }
             }
-        }
-        else
         {
             for (int i = 0; i < 14; i++)
             {
@@ -364,15 +361,25 @@ public class SaveLoadScript : MonoBehaviour
             Gauss.LinearSystem U = new Gauss.LinearSystem(a_matrix, b_vector, 1);
 
             result = U.XVector;
-
-            for (int i = 0; i < 14; i++)
+            for (int i = 0; i < countColor; i++)
+            {
+                dataWriter.Write(result[i]);
+            }
+            dataWriter.WriteLine();
+                for (int i = 0; i < 14; i++)
             {
                 for (int j = 0; j < 11; j++)
                 {
                     if (ColorInArray(boardColor[i, j]) != 50)
+                    {
+                        answerMatrix[i,j] = result[ColorInArray(boardColor[i, j])];
                         dataWriter.Write(result[ColorInArray(boardColor[i, j])] + " ");
+                    }
                     else
+                    {
+                        answerMatrix[i, j] = -1;
                         dataWriter.Write(-1 + " ");
+                    }
                 }
                 dataWriter.WriteLine();
             }
@@ -435,9 +442,21 @@ public class SaveLoadScript : MonoBehaviour
 
     public static bool doSaveWindow, doLoadWindow;
     private Rect windowRect0 = new Rect(Screen.width / 3, Screen.height / 3, Screen.width / 3, Screen.height / 3);
+    double potential = -1;
 
     void OnGUI()
     {
+        if (potential != -1)
+        {
+            GUI.color = Color.cyan;
+            GUI.Label(new Rect(Screen.width / 50, 5 * Screen.height / 6, Screen.width / 7, Screen.height / 10), "Потенциал в данной точке равен " + potential + " В");
+        }
+
+        if (electricity != -1)
+        {
+            GUI.color = Color.cyan;
+            GUI.Label(new Rect(Screen.width / 50, 5 * Screen.height / 6, Screen.width / 7, Screen.height / 10), "Сила тока в данном элементе " + electricity + " A");
+        }
         if (doSaveWindow)
         {
             GUI.color = Color.cyan;
@@ -538,37 +557,48 @@ public class SaveLoadScript : MonoBehaviour
                             resistorsMatrixArr[x, y].resistorNum = matrix[x, y, 7];
                             if ((matrix[x, y, 3] == 1 && matrix[x, y, 6] == 0) || (matrix[x, y, 3] == 0 && matrix[x, y, 6] == 1))
                             {
-                                if (boardColor[x - 1, y] > 0)
-                                    if (resistorsMatrixArr[x, y].firstUzel == 0)
-                                        resistorsMatrixArr[x, y].firstUzel = boardColor[x - 1, y];
-                                    else
+                                //Debug.Log(boardColor[x + 1, y]);
+                                if (x > 0)
+                                {
+                                    if (boardColor[x - 1, y] > 0)
+                                        if (resistorsMatrixArr[x, y].firstUzel == 0)
+                                            resistorsMatrixArr[x, y].firstUzel = boardColor[x - 1, y];
+                                        else
+                                            if (resistorsMatrixArr[x, y].secondUzel == 0)
+                                            resistorsMatrixArr[x, y].secondUzel = boardColor[x - 1, y];
+                                }
+                                if (x < 13)
+                                {
+                                    if (boardColor[x + 1, y] > 0)
+                                        if (resistorsMatrixArr[x, y].firstUzel == 0)
+                                            resistorsMatrixArr[x, y].firstUzel = boardColor[x + 1, y];
+                                        else
                                         if (resistorsMatrixArr[x, y].secondUzel == 0)
-                                        resistorsMatrixArr[x, y].secondUzel = boardColor[x - 1, y];
-
-                                if (boardColor[x + 1, y] > 0)
-                                    if (resistorsMatrixArr[x, y].firstUzel == 0)
-                                        resistorsMatrixArr[x, y].firstUzel = boardColor[x + 1, y];
-                                    else
-                                    if (resistorsMatrixArr[x, y].secondUzel == 0)
-                                        resistorsMatrixArr[x, y].secondUzel = boardColor[x + 1, y];
+                                            resistorsMatrixArr[x, y].secondUzel = boardColor[x + 1, y];
+                                }
                             }
                             else
                             {
                                 if ((matrix[x, y, 3] == 1 && matrix[x, y, 6] == 0) || (matrix[x, y, 3] == 0 && matrix[x, y, 6] == 1))
                                 {
-                                    if (boardColor[x, y - 1] > 0)
-                                        if (resistorsMatrixArr[x, y].firstUzel == 0)
-                                            resistorsMatrixArr[x, y].firstUzel = boardColor[x, y - 1];
-                                        else
-                                        if (resistorsMatrixArr[x, y].secondUzel == 0)
-                                            resistorsMatrixArr[x, y].secondUzel = boardColor[x, y - 1];
-
-                                    if (boardColor[x, y + 1] > 0)
-                                        if (resistorsMatrixArr[x, y].firstUzel == 0)
-                                            resistorsMatrixArr[x, y].firstUzel = boardColor[x, y + 1];
-                                        else
+                                    if (y > 0)
+                                    {
+                                        if (boardColor[x, y - 1] > 0)
+                                            if (resistorsMatrixArr[x, y].firstUzel == 0)
+                                                resistorsMatrixArr[x, y].firstUzel = boardColor[x, y - 1];
+                                            else
                                             if (resistorsMatrixArr[x, y].secondUzel == 0)
-                                            resistorsMatrixArr[x, y].secondUzel = boardColor[x, y + 1];
+                                                resistorsMatrixArr[x, y].secondUzel = boardColor[x, y - 1];
+                                    }
+                                    if (x < 10)
+                                    {
+                                        if (boardColor[x, y + 1] > 0)
+                                            if (resistorsMatrixArr[x, y].firstUzel == 0)
+                                                resistorsMatrixArr[x, y].firstUzel = boardColor[x, y + 1];
+                                            else
+                                                if (resistorsMatrixArr[x, y].secondUzel == 0)
+                                                resistorsMatrixArr[x, y].secondUzel = boardColor[x, y + 1];
+                                    }
                                 }
                             }
                         }
@@ -614,14 +644,75 @@ public class SaveLoadScript : MonoBehaviour
         GUI.DragWindow(new Rect(0, 0, 10000, 10000));
     }
 
+    private void Start()
+    {
+        for (int i = 0; i < 14; i++)
+        {
+            for (int j = 0; j < 11; j++)
+            {
+                answerMatrix[i, j] = -1;
+            }
+        }
+    }
     public Camera _camera;
     void Update()
     {
+        doAnalizeWindow = false;
+        if (_camera.ScreenToWorldPoint(Input.mousePosition).x >-0.5 && _camera.ScreenToWorldPoint(Input.mousePosition).x  < 13.5)
+        {
+            RaycastHit2D hit = Physics2D.Raycast(_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            if (answerMatrix[(int)hit.transform.position.x, (int)hit.transform.position.y] != -1)
+                potential = answerMatrix[(int)hit.transform.position.x, (int)hit.transform.position.y];
+            else
+                potential = -1;
 
-        RaycastHit2D hit = Physics2D.Raycast(_camera.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
-        if (ColorInArray(boardColor[(int)hit.transform.position.x, (int)hit.transform.position.y]) != 50)
-            Debug.Log(result[ColorInArray(boardColor[(int)hit.transform.position.x, (int)hit.transform.position.y])] + " ");
+            if (matrix[(int)hit.transform.position.x, (int)hit.transform.position.y, 2] == 6)
+            {
 
+                if ((matrix[(int)hit.transform.position.x, (int)hit.transform.position.y, 3] == 1 && matrix[(int)hit.transform.position.x, (int)hit.transform.position.y, 6] == 0) || (matrix[(int)hit.transform.position.x, (int)hit.transform.position.y, 3] == 0 && matrix[(int)hit.transform.position.x, (int)hit.transform.position.y, 6] == 1))
+                {
+
+                    if (answerMatrix[(int)hit.transform.position.x - 1, (int)hit.transform.position.y] < answerMatrix[(int)hit.transform.position.x + 1, (int)hit.transform.position.y])
+                    {
+                        Instantiate(arrowleft, new Vector3((int)hit.transform.position.x, (int)hit.transform.position.y, 0f), Quaternion.Euler(0, 0, 0));
+                        electricity = (answerMatrix[(int)hit.transform.position.x + 1, (int)hit.transform.position.y] - answerMatrix[(int)hit.transform.position.x - 1, (int)hit.transform.position.y]) / matrix[(int)hit.transform.position.x, (int)hit.transform.position.y, 7];
+                    }
+                    else
+                    if (answerMatrix[(int)hit.transform.position.x - 1, (int)hit.transform.position.y] > answerMatrix[(int)hit.transform.position.x + 1, (int)hit.transform.position.y])
+                    {
+                        Instantiate(arrowRight, new Vector3((int)hit.transform.position.x, (int)hit.transform.position.y, 0f), Quaternion.Euler(0, 0, 0));
+                        electricity = (answerMatrix[(int)hit.transform.position.x - 1, (int)hit.transform.position.y] - answerMatrix[(int)hit.transform.position.x + 1, (int)hit.transform.position.y]) / matrix[(int)hit.transform.position.x, (int)hit.transform.position.y, 7];
+
+                    }
+                    else electricity = 0;
+                }
+                else
+            if ((matrix[(int)hit.transform.position.x, (int)hit.transform.position.y, 3] == 0.7071068f && matrix[(int)hit.transform.position.x, (int)hit.transform.position.y, 6] == 0.7071068f) || (matrix[(int)hit.transform.position.x, (int)hit.transform.position.y, 3] == -0.7071068f && matrix[(int)hit.transform.position.x, (int)hit.transform.position.y, 6] == 0.7071068f))
+                {
+                    if (answerMatrix[(int)hit.transform.position.x, (int)hit.transform.position.y - 1] < answerMatrix[(int)hit.transform.position.x, (int)hit.transform.position.y + 1])
+                    {
+                        Instantiate(arrowDown, new Vector3((int)hit.transform.position.x, (int)hit.transform.position.y, 0f), Quaternion.Euler(0, 0, 0));
+                        electricity = (answerMatrix[(int)hit.transform.position.x, (int)hit.transform.position.y + 1] - answerMatrix[(int)hit.transform.position.x, (int)hit.transform.position.y - 1]) / matrix[(int)hit.transform.position.x, (int)hit.transform.position.y, 7];
+                    }
+                    else
+                    if (answerMatrix[(int)hit.transform.position.x, (int)hit.transform.position.y - 1] > answerMatrix[(int)hit.transform.position.x, (int)hit.transform.position.y + 1])
+                    {
+                        Instantiate(arrowUp, new Vector3((int)hit.transform.position.x, (int)hit.transform.position.y, 0f), Quaternion.Euler(0, 0, 0));
+                        electricity = (answerMatrix[(int)hit.transform.position.x, (int)hit.transform.position.y - 1] - answerMatrix[(int)hit.transform.position.x, (int)hit.transform.position.y + 1]) / matrix[(int)hit.transform.position.x, (int)hit.transform.position.y, 7];
+
+                    }
+                    else
+                    {
+                        Destroy(arrowRight);
+                        Destroy(arrowleft);
+                        Destroy(arrowDown);
+                        Destroy(arrowUp);
+                        electricity = 0;
+                    }
+                }
+            }
+            else electricity = -1;
+        }
 
         if (Input.GetKeyDown("s"))
         {

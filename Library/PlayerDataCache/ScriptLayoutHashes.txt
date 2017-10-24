@@ -113,7 +113,7 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.VR.WSA.Spa
 7ffdff2ffb32264fd0346566538f2ac4 Assembly-CSharp.dll:.LabelScript
 953f5c83d3dcca452899455eebbe96d5 Assembly-CSharp.dll:.BoardManager
 2372fa432fa7c3dd2d6db17a9fd45d9f Assembly-CSharp.dll:.BlockScript
-51ead01e21b19d37b590e2518b41a277 Assembly-CSharp.dll:.SaveLoadScript
+c5f54f1bf3f5849b431b1c1d9f4e8ef8 Assembly-CSharp.dll:.SaveLoadScript
 fc1e0f4d8439d9928083474691511a13 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkAnimator
 05524b8f659e7bfe5756d1335fec24ba UnityEngine.Networking.dll:UnityEngine.Networking.NetworkBehaviour
 60b2bb652410a5867a5ab9a01cd38461 UnityEngine.Networking.dll:UnityEngine.Networking.NetworkDiscovery
@@ -141,3 +141,4 @@ c2275a8bfbb9f9942cad75ecdfded41d UnityEngine.HoloLens.dll:UnityEngine.VR.WSA.Spa
 b6d71c95aaa62a0cfbf744f99e82021d Assembly-CSharp.dll:.UndoRedoScript
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.LeftRotationScript
 05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.LoadScript
+05524b8f659e7bfe5756d1335fec24ba Assembly-CSharp.dll:.MenuScript

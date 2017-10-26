@@ -70,7 +70,7 @@ MonoBehaviour:
   m_MinSize: {x: 683, y: 342}
   m_MaxSize: {x: 12008, y: 8042}
   vertical: 0
-  controlID: 104
+  controlID: 32
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -211,7 +211,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 342}
   m_MaxSize: {x: 8006, y: 8042}
   vertical: 1
-  controlID: 71
+  controlID: 92
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -235,7 +235,7 @@ MonoBehaviour:
   m_MinSize: {x: 406, y: 221}
   m_MaxSize: {x: 8006, y: 4021}
   vertical: 0
-  controlID: 48
+  controlID: 93
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -429,19 +429,19 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 0
     m_Folders:
-    - Assets/Scripts
+    - "Assets/TexturesV2/\u0421\u0435\u043A\u0441\u0442\u0443\u0440\u044B \u0441\u0442\u0440\u0435\u043B\u043E\u0447\u0435\u043A"
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Scripts
+  - "Assets/TexturesV2/\u0421\u0435\u043A\u0441\u0442\u0443\u0440\u044B \u0441\u0442\u0440\u0435\u043B\u043E\u0447\u0435\u043A"
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\PlatformerUnity\TUITasks
   m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 1a260000
-    m_LastClickedID: 9754
-    m_ExpandedIDs: 0000000012260000282600009426000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 40}
+    m_SelectedIDs: b4260000
+    m_LastClickedID: 9908
+    m_ExpandedIDs: 00000000122600002826000094260000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -494,8 +494,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: ec060000
-    m_LastClickedInstanceID: 1772
+    m_SelectedInstanceIDs: 
+    m_LastClickedInstanceID: 0
     m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: 6a1c00007651ffff3a2a00007a2a0000d4260000000000007a610000922600006826000082260000
     m_RenameOverlay:
@@ -584,10 +584,10 @@ MonoBehaviour:
     width: 282
     height: 709
   m_TreeViewState:
-    scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: ec060000
-    m_LastClickedID: 0
-    m_ExpandedIDs: 92ecfbfffeecfbff06eefbffd8f1fbff44f2fbff4cf3fbff30f8fbff9cf8fbffa4f9fbff9018fcfffe18fcff061afcffce3cfcff383dfcff443efcff1afcffff00000000be27000020280000
+    scrollPos: {x: 0, y: 92}
+    m_SelectedIDs: 22390000
+    m_LastClickedID: 14626
+    m_ExpandedIDs: 8c62fffffa62ffff0264ffff1afcffff00000000303900007439000082390000ec390000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -637,14 +637,14 @@ MonoBehaviour:
     width: 1224
     height: 709
   m_SceneLighting: 1
-  lastFramingTime: 404.1744327463918
+  lastFramingTime: 3744.013427308779
   m_2DMode: 1
   m_isRotationLocked: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 5.2362795, y: 4.4148746, z: 10}
+    m_Target: {x: 4.796707, y: 5.6679797, z: -100}
     speed: 2
-    m_Value: {x: 5.2362795, y: 4.4148746, z: 10}
+    m_Value: {x: 4.796707, y: 5.6679797, z: -100}
   m_RenderMode: 0
   m_ValidateTrueMetals: 0
   m_SceneViewState:
@@ -671,9 +671,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 14.61373
+    m_Target: 12.504001
     speed: 2
-    m_Value: 14.61373
+    m_Value: 12.504001
   m_Ortho:
     m_Target: 1
     speed: 2

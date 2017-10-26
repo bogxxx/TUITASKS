@@ -13,7 +13,7 @@ public class SaveLoadScript : MonoBehaviour
     double[] result = new double[100];
     public static bool doAnalizeWindow;
     public static double[,] answerMatrix = new double[100, 100];
-    public GameObject arrowUp, arrowLeft, arrowRight, arrowDown;
+    public GameObject arrowUp, arrowLeft, arrowRight, arrowDown, potentialSprite;
     int xPosEds, yPosEds;
 
     public struct ResistorInOut
@@ -269,6 +269,7 @@ public class SaveLoadScript : MonoBehaviour
         }
 
     }
+
     void Amperage(int i, int j)
     {
         Debug.Log(i + " " +  j);
@@ -414,6 +415,7 @@ public class SaveLoadScript : MonoBehaviour
 
     }
 
+    private double maxPotential = -1;
     void Save()
     {
 
@@ -476,7 +478,9 @@ public class SaveLoadScript : MonoBehaviour
             result = U.XVector;
             for (int i = 0; i < countColor; i++)
             {
-                dataWriter.Write(result[i]);
+                dataWriter.Write(result[i] + " ");
+                if (result[i]>maxPotential)
+                    { maxPotential = result[i]; }
             }
             dataWriter.WriteLine();
             for (int i = 0; i < 14; i++)
@@ -486,6 +490,19 @@ public class SaveLoadScript : MonoBehaviour
                     if (ColorInArray(boardColor[i, j]) != 50)
                     {
                         answerMatrix[i,j] = result[ColorInArray(boardColor[i, j])];
+                        if (answerMatrix[i, j] != 0)
+                        {
+                            potentialSprite.transform.localScale = new Vector3(1f, (float)(answerMatrix[i, j] / maxPotential), 1f);
+                            Instantiate(potentialSprite, new Vector3(i - 0.5f, j - 0.5f, 0f), Quaternion.Euler(0, 0, 0));
+                            potentialSprite.transform.localScale = new Vector3(1f, (float)(maxPotential / answerMatrix[i, j]), 1f);
+                        } else
+                        {
+                            potentialSprite.transform.localScale = new Vector3(1f, (float)(0.1), 1f);
+                            Instantiate(potentialSprite, new Vector3(i - 0.5f, j - 0.5f, 0f), Quaternion.Euler(0, 0, 0));
+                            potentialSprite.transform.localScale = new Vector3(1f, (float)(10), 1f);
+                        }
+
+
                         dataWriter.Write(result[ColorInArray(boardColor[i, j])] + " ");
                     }
                     else
@@ -541,6 +558,14 @@ public class SaveLoadScript : MonoBehaviour
             {
                 for (int y = 0; y < 11; y++)
                 {
+                    if (matrix[x, y, 2] == 3 && ((matrix[x, y, 3] == 1f && matrix[x, y, 6] == 0f) || (matrix[x, y, 3] == 0f && matrix[x, y, 6] == 1f)) && answerMatrix[x + 1, y] == answerMatrix[x - 1, y])
+                    {
+                        shortCircuit = true;
+                    } else
+                    if (matrix[x, y, 2] == 3 && ((matrix[x, y, 3] == 0.7071068f && matrix[x, y, 6] == 0.7071068f) || (matrix[x, y, 3] == -0.7071068f && matrix[x, y, 6] == 0.7071068f)) && answerMatrix[x, y + 1] == answerMatrix[x, y - 1])
+                    {
+                        shortCircuit = true;
+                    } else
                     if (matrix[x, y, 2] == 1 || matrix[x, y, 2] == 3)
                     {
                         amperage = 0;
@@ -548,6 +573,7 @@ public class SaveLoadScript : MonoBehaviour
                         Amperage(x, y);
                         answerMatrix[x, y] = amperage;
                     }
+
                 }
             }
 
@@ -614,18 +640,23 @@ public class SaveLoadScript : MonoBehaviour
     }
 
 
-    public static bool doSaveWindow, doLoadWindow, info;
+    public static bool doSaveWindow, doLoadWindow, info, shortCircuit;
     private Rect windowRect0 = new Rect(Screen.width / 3, Screen.height / 3, Screen.width / 3, Screen.height / 3);
     double potential = -1;
 
     void OnGUI()
     {
-
+        if (shortCircuit)
+        {
+            GUI.color = Color.cyan;
+            windowRect0 = GUI.Window(2, windowRect0, DoMyWindow, "Произошло короткое замыкание!");
+        }
         if (info)
         {
             GUI.color = Color.cyan;
             GUI.Label(new Rect(Screen.width / 45, 4.4f * Screen.height / 6, Screen.width / 7, Screen.height / 10), "Общая сила тока равна " + answerMatrix[xPosEds, yPosEds].ToString("0.000") + " A");
-            GUI.Label(new Rect(Screen.width / 45, 4.75f * Screen.height / 6, Screen.width / 7, Screen.height / 10), "Общая сопротивление равно " + (matrix[xPosEds, yPosEds,8] / answerMatrix[xPosEds, yPosEds]).ToString("0.000") + " Ом");
+            GUI.Label(new Rect(Screen.width / 45, 4.75f * Screen.height / 6, Screen.width / 7, Screen.height / 10), "Общее" +
+                " сопротивление равно " + (matrix[xPosEds, yPosEds,8] / answerMatrix[xPosEds, yPosEds]).ToString("0.000") + " Ом");
 
         }
 
@@ -668,195 +699,210 @@ public class SaveLoadScript : MonoBehaviour
 
     void DoMyWindow(int windowID)
     {
-        playerDataPath = "";
-        GUI.color = Color.cyan;
-        path = GUI.TextField(new Rect(10, Screen.height / 10, (Screen.width / 3 - 20), Screen.height / 30), path);
-        if (GUI.Button(new Rect(Screen.width / 21, Screen.height / 4, Screen.width / 9, Screen.width / 50), "Подтвердить"))
+
+        if (windowID == 2)
         {
-
-            playerDataPath = "C:/" + path + ".db";
-
-
             GUI.color = Color.cyan;
-            if (windowID == 0)
+            if (GUI.Button(new Rect(Screen.width / 9, Screen.height / 4, Screen.width / 9, Screen.width / 50), "Подтвердить"))
             {
-                Initialized();
-                Load();
-                for (int i = 0; i < 14; i++)
-                {
-                    for (int j = 0; j < 11; j++)
-                    {
-                        RaycastHit2D hit = Physics2D.Raycast(new Vector3(matrix[i, j, 0], matrix[i, j, 1], -10f), Vector2.zero);
-                        if ((int)matrix[i, j, 2] != -1)
-                        {
-                            hit.transform.GetComponent<SpriteRenderer>().sprite = arraySprites[(int)matrix[i, j, 2]];
-                        }
-                        else
-                            hit.transform.GetComponent<SpriteRenderer>().sprite = null;
-                        hit.transform.rotation = new Quaternion(matrix[i, j, 4], matrix[i, j, 5], matrix[i, j, 6], matrix[i, j, 3]);
-                        hit.collider.gameObject.GetComponent<BlockScript>().resist = (int)matrix[i, j, 7];
-                        hit.collider.gameObject.GetComponent<BlockScript>().eds = (int)matrix[i, j, 8];
-
-                    }
-                }
-                Debug.Log("Загрузка произведена, мать твою за ногу");
+                shortCircuit = false;
             }
-            doLoadWindow = false;
 
-
-            if (windowID == 1)
+        }
+        else
+        {
+            playerDataPath = "";
+            GUI.color = Color.cyan;
+            path = GUI.TextField(new Rect(10, Screen.height / 10, (Screen.width / 3 - 20), Screen.height / 30), path);
+            if (GUI.Button(new Rect(Screen.width / 21, Screen.height / 4, Screen.width / 9, Screen.width / 50), "Подтвердить"))
             {
-                Start();
-                int i = 1;
-                int xcounter = 0, ycounter = 0;
-                for (int x = 0; x < 14; x++)
+
+                playerDataPath = "C:/" + path + ".db";
+
+                GUI.color = Color.cyan;
+
+
+                GUI.color = Color.cyan;
+                if (windowID == 0)
                 {
-                    for (int y = 0; y < 11; y++)
+                    Initialized();
+                    Load();
+                    for (int i = 0; i < 14; i++)
                     {
-                        int spriteInt = -1;
-                        RaycastHit2D hit = Physics2D.Raycast(new Vector3(x, y, -10f), Vector2.zero);
-                        spriteInt = getIntOfImage(hit.transform.GetComponent<SpriteRenderer>().sprite);
-                        Saves[i, 0] = x;
-                        Saves[i, 1] = y;
-                        Saves[i, 2] = spriteInt;
-                        Saves[i, 3] = hit.transform.rotation.w;
-                        Saves[i, 4] = hit.transform.rotation.x;
-                        Saves[i, 5] = hit.transform.rotation.y;
-                        Saves[i, 6] = hit.transform.rotation.z;
-                        Saves[i, 7] = hit.collider.gameObject.GetComponent<BlockScript>().resist;
-                        Saves[i, 8] = hit.collider.gameObject.GetComponent<BlockScript>().eds;
-                        if (ycounter > 10)
+                        for (int j = 0; j < 11; j++)
                         {
-                            ycounter = 0;
-                            xcounter++;
-                        }
-                        for (int j = 0; j < 9; j++)
-                            matrix[xcounter, ycounter, j] = Saves[i, j];
-                        i++;
-                        ycounter++;
-                    }
-
-                }
-                for (int x = 0; x < 14; x++)
-                {
-                    for (int y = 0; y < 11; y++)
-                    {
-                        boardColor[x, y] = 0;
-                    }
-                }
-                boundColor = 0;
-
-
-                for (int x = 0; x < 14; x++)
-                {
-                    for (int y = 0; y < 11; y++)
-                    {
-                        if (matrix[x,y,2] == 3)
-                        {
-                            xPosEds = x;
-                            yPosEds = y;
-                            dfs(x, y);
-                        }
-                    }
-                }
-
-                for (int x = 0; x < 14; x++)
-                {
-                    for (int y = 0; y < 11; y++)
-                    {
-                        if (matrix[x,y,2] == 6 || matrix[x,y,2] == 3 || matrix[x, y, 2] == 1 || matrix[x, y, 2] == 2)
-                        {
-                            resistorsMatrixArr[x, y].resistorNum = matrix[x, y, 7];
-                            if ((matrix[x, y, 3] == 1 && matrix[x, y, 6] == 0) || (matrix[x, y, 3] == 0 && matrix[x, y, 6] == 1))
+                            RaycastHit2D hit = Physics2D.Raycast(new Vector3(matrix[i, j, 0], matrix[i, j, 1], -10f), Vector2.zero);
+                            if ((int)matrix[i, j, 2] != -1)
                             {
-                                //Debug.Log(boardColor[x + 1, y]);
-                                if (x > 0)
-                                {
-                                    if (boardColor[x - 1, y] > 0)
-                                        if (resistorsMatrixArr[x, y].firstUzel == 0)
-                                            resistorsMatrixArr[x, y].firstUzel = boardColor[x - 1, y];
-                                        else
-                                            if (resistorsMatrixArr[x, y].secondUzel == 0)
-                                            resistorsMatrixArr[x, y].secondUzel = boardColor[x - 1, y];
-                                }
-                                if (x < 13)
-                                {
-                                    if (boardColor[x + 1, y] > 0)
-                                        if (resistorsMatrixArr[x, y].firstUzel == 0)
-                                            resistorsMatrixArr[x, y].firstUzel = boardColor[x + 1, y];
-                                        else
-                                        if (resistorsMatrixArr[x, y].secondUzel == 0)
-                                            resistorsMatrixArr[x, y].secondUzel = boardColor[x + 1, y];
-                                }
+                                hit.transform.GetComponent<SpriteRenderer>().sprite = arraySprites[(int)matrix[i, j, 2]];
                             }
                             else
-                            {                                
-                                if (y > 0)
-                                {
-                                    if (boardColor[x, y - 1] > 0)
-                                        if (resistorsMatrixArr[x, y].firstUzel == 0)
-                                            resistorsMatrixArr[x, y].firstUzel = boardColor[x, y - 1];
-                                        else
-                                        if (resistorsMatrixArr[x, y].secondUzel == 0)
-                                            resistorsMatrixArr[x, y].secondUzel = boardColor[x, y - 1];
-                                }
-                                if (x < 10)
-                                {
-                                    if (boardColor[x, y + 1] > 0)
-                                        if (resistorsMatrixArr[x, y].firstUzel == 0)
-                                            resistorsMatrixArr[x, y].firstUzel = boardColor[x, y + 1];
-                                        else
-                                            if (resistorsMatrixArr[x, y].secondUzel == 0)
-                                            resistorsMatrixArr[x, y].secondUzel = boardColor[x, y + 1];
-                                }                                
-                            }
+                                hit.transform.GetComponent<SpriteRenderer>().sprite = null;
+                            hit.transform.rotation = new Quaternion(matrix[i, j, 4], matrix[i, j, 5], matrix[i, j, 6], matrix[i, j, 3]);
+                            hit.collider.gameObject.GetComponent<BlockScript>().resist = (int)matrix[i, j, 7];
+                            hit.collider.gameObject.GetComponent<BlockScript>().eds = (int)matrix[i, j, 8];
+
                         }
-                        if (matrix[x, y, 2] == 3)
-                        {
-                            resistorsMatrixArr[x, y].resistorNum = matrix[x, y, 8];
-                        }                        
                     }
+                    Debug.Log("Загрузка произведена, мать твою за ногу");
                 }
+                doLoadWindow = false;
 
-                bool f;
-                int length = 0;
 
-                for (int x = 0; x < 14; x++)
+                if (windowID == 1)
                 {
-                    for (int y = 0; y < 11; y++)
+                    Start();
+                    int i = 1;
+                    int xcounter = 0, ycounter = 0;
+                    for (int x = 0; x < 14; x++)
                     {
-                        f = true;
-                        for (int k = 0; k < length; k++)
+                        for (int y = 0; y < 11; y++)
                         {
-                            if (colorArray[k] == boardColor[x, y])
+                            int spriteInt = -1;
+                            RaycastHit2D hit = Physics2D.Raycast(new Vector3(x, y, -10f), Vector2.zero);
+                            spriteInt = getIntOfImage(hit.transform.GetComponent<SpriteRenderer>().sprite);
+                            Saves[i, 0] = x;
+                            Saves[i, 1] = y;
+                            Saves[i, 2] = spriteInt;
+                            Saves[i, 3] = hit.transform.rotation.w;
+                            Saves[i, 4] = hit.transform.rotation.x;
+                            Saves[i, 5] = hit.transform.rotation.y;
+                            Saves[i, 6] = hit.transform.rotation.z;
+                            Saves[i, 7] = hit.collider.gameObject.GetComponent<BlockScript>().resist;
+                            Saves[i, 8] = hit.collider.gameObject.GetComponent<BlockScript>().eds;
+                            if (ycounter > 10)
                             {
-                                f = false;
-                                break;
+                                ycounter = 0;
+                                xcounter++;
                             }
+                            for (int j = 0; j < 9; j++)
+                                matrix[xcounter, ycounter, j] = Saves[i, j];
+                            i++;
+                            ycounter++;
                         }
-                        if (f && boardColor[x, y] > 0)
+
+                    }
+                    for (int x = 0; x < 14; x++)
+                    {
+                        for (int y = 0; y < 11; y++)
                         {
-                            colorArray[length] = boardColor[x, y];
-                            length++;
-                            countColor++;
+                            boardColor[x, y] = 0;
                         }
                     }
+                    boundColor = 0;
+
+
+                    for (int x = 0; x < 14; x++)
+                    {
+                        for (int y = 0; y < 11; y++)
+                        {
+                            if (matrix[x, y, 2] == 3)
+                            {
+                                xPosEds = x;
+                                yPosEds = y;
+                                dfs(x, y);
+                            }
+                        }
+                    }
+
+                    for (int x = 0; x < 14; x++)
+                    {
+                        for (int y = 0; y < 11; y++)
+                        {
+                            if (matrix[x, y, 2] == 6 || matrix[x, y, 2] == 3 || matrix[x, y, 2] == 1 || matrix[x, y, 2] == 2)
+                            {
+                                resistorsMatrixArr[x, y].resistorNum = matrix[x, y, 7];
+                                if ((matrix[x, y, 3] == 1 && matrix[x, y, 6] == 0) || (matrix[x, y, 3] == 0 && matrix[x, y, 6] == 1))
+                                {
+                                    //Debug.Log(boardColor[x + 1, y]);
+                                    if (x > 0)
+                                    {
+                                        if (boardColor[x - 1, y] > 0)
+                                            if (resistorsMatrixArr[x, y].firstUzel == 0)
+                                                resistorsMatrixArr[x, y].firstUzel = boardColor[x - 1, y];
+                                            else
+                                                if (resistorsMatrixArr[x, y].secondUzel == 0)
+                                                resistorsMatrixArr[x, y].secondUzel = boardColor[x - 1, y];
+                                    }
+                                    if (x < 13)
+                                    {
+                                        if (boardColor[x + 1, y] > 0)
+                                            if (resistorsMatrixArr[x, y].firstUzel == 0)
+                                                resistorsMatrixArr[x, y].firstUzel = boardColor[x + 1, y];
+                                            else
+                                            if (resistorsMatrixArr[x, y].secondUzel == 0)
+                                                resistorsMatrixArr[x, y].secondUzel = boardColor[x + 1, y];
+                                    }
+                                }
+                                else
+                                {
+                                    if (y > 0)
+                                    {
+                                        if (boardColor[x, y - 1] > 0)
+                                            if (resistorsMatrixArr[x, y].firstUzel == 0)
+                                                resistorsMatrixArr[x, y].firstUzel = boardColor[x, y - 1];
+                                            else
+                                            if (resistorsMatrixArr[x, y].secondUzel == 0)
+                                                resistorsMatrixArr[x, y].secondUzel = boardColor[x, y - 1];
+                                    }
+                                    if (x < 10)
+                                    {
+                                        if (boardColor[x, y + 1] > 0)
+                                            if (resistorsMatrixArr[x, y].firstUzel == 0)
+                                                resistorsMatrixArr[x, y].firstUzel = boardColor[x, y + 1];
+                                            else
+                                                if (resistorsMatrixArr[x, y].secondUzel == 0)
+                                                resistorsMatrixArr[x, y].secondUzel = boardColor[x, y + 1];
+                                    }
+                                }
+                            }
+                            if (matrix[x, y, 2] == 3)
+                            {
+                                resistorsMatrixArr[x, y].resistorNum = matrix[x, y, 8];
+                            }
+                        }
+                    }
+
+                    bool f;
+                    int length = 0;
+
+                    for (int x = 0; x < 14; x++)
+                    {
+                        for (int y = 0; y < 11; y++)
+                        {
+                            f = true;
+                            for (int k = 0; k < length; k++)
+                            {
+                                if (colorArray[k] == boardColor[x, y])
+                                {
+                                    f = false;
+                                    break;
+                                }
+                            }
+                            if (f && boardColor[x, y] > 0)
+                            {
+                                colorArray[length] = boardColor[x, y];
+                                length++;
+                                countColor++;
+                            }
+                        }
+                    }
+                    Save();
+                    Debug.Log("saved, блять, а теперь иди нахуй");
+                    info = true;
+                    countColor = 0;
+                    doSaveWindow = false;
                 }
-                Save();
-                Debug.Log("saved, блять, а теперь иди нахуй");
-                info = true;
-                playerDataPath = "";
-                countColor = 0;
+            }
+
+            if (GUI.Button(new Rect(Screen.width / 6, Screen.height / 4, Screen.width / 9, Screen.width / 50), "Отмена"))
+            {
                 doSaveWindow = false;
+                doLoadWindow = false;
             }
         }
-
-        if(GUI.Button(new Rect(Screen.width / 6, Screen.height / 4, Screen.width / 9, Screen.width / 50), "Отмена"))
-        {
-            doSaveWindow = false;
-            doLoadWindow = false;
-        }
-            GUI.DragWindow(new Rect(0, 0, 10000, 10000));
+        GUI.DragWindow(new Rect(0, 0, 10000, 10000));
+        
     }
 
     private void Start()
@@ -866,7 +912,10 @@ public class SaveLoadScript : MonoBehaviour
             for (int j = 0; j < 11; j++)
             {
                 answerMatrix[i, j] = -1;
+                boardColor[i, j] = -1;
+                a_matrix[i, j] = 0;
             }
+            b_vector[i] = 0;
         }
     }
     public double potentialOnVolt;

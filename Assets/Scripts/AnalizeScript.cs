@@ -5,9 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class AnalizeScript : MonoBehaviour {
 
-    public static void OnMouseDown()
+    public  void OnMouseDown()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-
+        Application.LoadLevel("Scene");
     }
 }

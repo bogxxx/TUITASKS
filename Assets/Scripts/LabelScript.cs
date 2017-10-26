@@ -31,7 +31,7 @@ public class LabelScript : MonoBehaviour {
     {
         GUI.color = Color.cyan;
         resist = GUI.TextField(new Rect(10, Screen.height / 10, (Screen.width / 3 - 20), Screen.height / 30), resist);
-        if (GUI.Button(new Rect(Screen.width / 9, Screen.height / 4 + 30, Screen.width / 9, Screen.width / 50), "Подтвердить"))
+        if (GUI.Button(new Rect(Screen.width / 21, Screen.height / 4, Screen.width / 9, Screen.width / 50), "Подтвердить"))
         {
             GUI.color = Color.cyan;
             RaycastHit2D hit = Physics2D.Raycast(new Vector3(x, y, -10f), Vector2.zero);
@@ -45,6 +45,11 @@ public class LabelScript : MonoBehaviour {
                 hit.collider.gameObject.GetComponent<BlockScript>().eds = int.Parse(resist);
                 doEdsWindow = false;
             }
+        }
+        if (GUI.Button(new Rect(Screen.width / 6, Screen.height / 4, Screen.width / 9, Screen.width / 50), "Отмена"))
+        {
+            doEdsWindow = false;
+            doResistWindow = false;
         }
         GUI.DragWindow(new Rect(0, 0, 10000, 10000));
     }
